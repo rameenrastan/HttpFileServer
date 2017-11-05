@@ -1,11 +1,31 @@
-import fnmatch
-import os
+import os, fnmatch
 import socket
-import sys
-
+import threading
 
 # define directory name
 directory = "server-files"
+
+def server(host, port):
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind((host, port))
+        listener.listen(10)
+        while True:
+            conn, addr = listener.accept()
+            threading.Thread(target=handle_client, args=(conn, addr)).start()
+    finally:
+        listener.close()
+
+def handle_client(conn, addr):
+    try:
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            conn.sendall(data)
+    finally:
+        conn.close()        
 
 
 # print list of files within user dir
@@ -40,7 +60,7 @@ def init():
 
 
 def main():
-    init()
+    server('',8080)
     list_files()
     read_file("test.txt")
 
