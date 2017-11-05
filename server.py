@@ -17,6 +17,16 @@ def server(host, port):
     finally:
         listener.close()
 
+def handle_client(conn, addr):
+    try:
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            conn.sendall(data)
+    finally:
+        conn.close()        
+
 
 # print list of files within user dir
 def list_files():
