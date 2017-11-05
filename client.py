@@ -1,16 +1,18 @@
 import argparse
-
+import os
 
 # parse user input
 def parse():
 
     parser = argparse.ArgumentParser(add_help=False)
 
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     # add arguments to CLI
     parser.add_argument('-h', action="store_true")
     parser.add_argument('-v', action="store_true")
-    parser.add_argument('-p', type=int)
-    parser.add_argument('-d', type=str)
+    parser.add_argument('-p', type=int, default="8080")
+    parser.add_argument('-d', type=str, default=dir_path)
 
     args = parser.parse_args()
 
@@ -30,7 +32,7 @@ def perform_help():
 
 
 def main():
-    parse()
+    print(parse())
 
 
 if __name__ == '__main__':
