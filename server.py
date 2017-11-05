@@ -1,4 +1,7 @@
-import os, fnmatch
+import fnmatch
+import os
+import socket
+import sys
 
 
 # define directory name
@@ -21,7 +24,23 @@ def read_file(file):
     print("/n" + f.read() + "/n")
 
 
+def init():
+    print("web-server socket initiated...")
+    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    address = "localhost"
+    port = 2727
+    serversocket.bind((address, port))
+    serversocket.listen(5)
+    print("web-server socket listening (address: %s, port: %s)" % (address, port))
+    while True:
+        print("web-server socket listening for incoming connections...")
+        (clientsocket, address) = serversocket.accept()
+        ct = client_thread(clientsocket)
+        ct.run()
+
+
 def main():
+    init()
     list_files()
     read_file("test.txt")
 
