@@ -39,6 +39,7 @@ def list_files():
 
 
 def main():
+    server('',8080)
     list_files()
 
 
