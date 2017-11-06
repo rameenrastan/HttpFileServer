@@ -49,6 +49,7 @@ def run_server(host="localhost", port=8080):
         while True:
             print("httpfs is listening for incoming connections...")
             conn, addr = listener.accept()
+            print("Got a connection from %s" % str(addr))
             threading.Thread(target=handle_client, args=(conn, addr)).start()
     except Exception as e:
         print("httpfs error occured: %s" % (e))
