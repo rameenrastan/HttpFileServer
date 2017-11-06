@@ -8,7 +8,6 @@ import os
 def parse():
 
     parser = argparse.ArgumentParser(add_help=False)
-
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     # add arguments to CLI
@@ -21,7 +20,6 @@ def parse():
 
     if args.h:
         perform_help()
-
     else:
         return vars(args)
 
@@ -32,7 +30,7 @@ def perform_help():
     print('Usage:\n\thttpfs [-v] [-p PORT] [-d PATH-TO-DIR]\n')
     print('The commands are:\n\n\t-v\tPrints debugging messages.')
     print('\t-p\tSpecifies the port number that the server will listen and serve at. Default is 8080.')
-    print('\t-d\tSpecifies the directory that the server will use to read/write requested files. \n\t\tDefault is the current directory when launching the application')
+    print('\t-d\tSpecifies the directory that the server will use to read/write requested files. \n\t\tDefault is the current directory when launching the application\n')
 
 
 def main():

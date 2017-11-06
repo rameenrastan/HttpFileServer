@@ -9,14 +9,18 @@ directory = "server-files"
 def server(host, port):
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
+        print("web-server socket initiated...")
         listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         listener.bind((host, port))
         listener.listen(10)
+        print("web-server listening ( host: %s, port: %s ) " % (host, port))
         while True:
+            print("web-server is listening for incoming connection...")
             conn, addr = listener.accept()
             threading.Thread(target=handle_client, args=(conn, addr)).start()
     finally:
         listener.close()
+
 
 def handle_client(conn, addr):
     try:
@@ -28,23 +32,6 @@ def handle_client(conn, addr):
     finally:
         conn.close()
 
-
-
-
-
-def init():
-    print("web-server socket initiated...")
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    address = "localhost"
-    port = 2727
-    serversocket.bind((address, port))
-    serversocket.listen(5)
-    print("web-server socket listening (address: %s, port: %s)" % (address, port))
-    while True:
-        print("web-server socket listening for incoming connections...")
-        (clientsocket, address) = serversocket.accept()
-        ct = client_thread(clientsocket)
-        ct.run()
 
 
 def main():
