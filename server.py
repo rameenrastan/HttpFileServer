@@ -41,19 +41,19 @@ def init_server():
 def run_server(host="localhost", port=8080):
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        print("web-server socket initiated...")
+        print("httpfs initiated...")
         listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         listener.bind((host, port))
         listener.listen(10)
-        print("web-server listening ( host: %s, port: %s ) " % (host, port))
+        print("httpfs listening on (host: %s, port: %s)" % (host, port))
         while True:
-            print("web-server is listening for incoming connection...")
+            print("httpfs is listening for incoming connections...")
             conn, addr = listener.accept()
             threading.Thread(target=handle_client, args=(conn, addr)).start()
     except Exception as e:
-        print("web-server error occured: %s" % (e))
+        print("httpfs error occured: %s" % (e))
     finally:
-        print("web-server closing...")
+        print("httpfs closing...")
         listener.close()
 
 
