@@ -87,15 +87,17 @@ def client_thread(conn, ip, port):
     print('Connection from: {ip: %s, port: %s} has closed...' % (ip, port))
 
 
+# handle user request
 def process_request(request):
-    if request == "get/":
-        files = util.list_files()
-        files_str = ""
-        for f in files:
-            files_str = files_str + f + "\n"
-        return files_str
+    if request == "get /":
+        return util.list_files()
+    elif request.startswith("get /"):
+        filename = request.replace("get /", "")
+        return util.read_file(filename)
+    elif request.startswith("post /"):
+        return 'performing post / filename'
     else:
-        return "Sorry, '%s' command does not exist" % request
+        return "sorry, '%s' command does not exist" % request
 
 
 def main():

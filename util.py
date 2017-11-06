@@ -8,21 +8,29 @@ directory = "server-files"
 
 # print list of files within user dir
 def list_files():
+    files_str = ''
     files = os.listdir(directory)
     pattern = "*.txt"
-
     file_list = []
     for file in files:
         if fnmatch.fnmatch(file, pattern):
-            file_list.append(file)
+            files_str = files_str + file + "\n"
 
-    return file_list
+    if not files:
+        return "no files found..."
+    else:
+        return files_str
+
 
 # read file contents
 def read_file(file):
-    # open file for read only
-    f = open(directory + "/" + file, "r")
-    print("/n" + f.read() + "/n")
+    try:
+        f = open(directory + "/" + file, "r")
+        file_content = "\n" + f.read() + "\n"
+        return file_content
+    except:
+        return "%s file does not exist" % file
+    
 
 #overwrite file conents
 def overwrite_file(file, content):
