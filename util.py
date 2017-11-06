@@ -4,15 +4,19 @@
 import os
 import fnmatch
 
+directory = "server-files"
 
 # print list of files within user dir
 def list_files():
     files = os.listdir(directory)
     pattern = "*.txt"
+
+    file_list = []
     for file in files:
         if fnmatch.fnmatch(file, pattern):
-            print(file)
+            file_list.append(file)
 
+    return file_list
 
 # read file contents
 def read_file(file):

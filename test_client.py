@@ -12,7 +12,7 @@ def client():
     sock.send(clients_input.encode("utf8")) # we must encode the string to bytes
     server_response = sock.recv(4096).decode("utf8")
 
-    print("Result from server is {}".format(server_response))
+    print("Httpfs server response: {}".format(server_response))
 
 
 def main():
