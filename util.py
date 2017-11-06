@@ -30,12 +30,15 @@ def read_file(file):
         return file_content
     except:
         return "%s file does not exist" % file
-    
+
 
 #overwrite file conents
 def overwrite_file(file, content):
     # open file for overwrite
     f = open(directory + "/" + file, "w+")
+    if not content:
+        return "please specify content for %s" % file
     f.write(content)
     f.seek(0)
-    print("/n" + f.read() + "/n")
+    response = "\n" + f.read() + "\n"
+    return response

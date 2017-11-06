@@ -40,6 +40,7 @@ def parse():
         return vars(args)
 
 
+# run server
 def run(host='localhost', port=8080):
 
     # create socket and bind it
@@ -95,15 +96,24 @@ def process_request(request):
         filename = request.replace("get /", "")
         return util.read_file(filename)
     elif request.startswith("post /"):
-        return 'performing post / filename'
+        # obtain all request terms
+        terms = request.split()
+        # obtain filename
+        filename = terms[1].replace("/", "")
+        # obtain content
+        content = ""
+        content_terms = terms
+        content_terms.pop(0)
+        content_terms.pop(0)
+        for t in content_terms:
+            content = content + " " + t
+        return util.overwrite_file(filename, content)
     else:
         return "sorry, '%s' command does not exist" % request
 
 
 def main():
     init_server()
-    # list_files()
-    # read_file("test.txt")
 
 
 if __name__ == "__main__":
