@@ -23,3 +23,11 @@ def read_file(file):
     # open file for read only
     f = open(directory + "/" + file, "r")
     print("/n" + f.read() + "/n")
+
+#overwrite file conents
+def overwrite_file(file, content):
+    # open file for overwrite
+    f = open(directory + "/" + file, "w+")
+    f.write(content)
+    f.seek(0)
+    print("/n" + f.read() + "/n")
