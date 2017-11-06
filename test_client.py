@@ -3,11 +3,17 @@
 import socket
 
 def client():
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("localhost", 9999))
-    msg = s.recv(1024)
-    s.close()
-    print (msg.decode('ascii'))
+    # create client socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(("localhost", 9999))
+
+    # handle user input to request from server
+    clients_input = input("Please enter a request...\n")
+    sock.send(clients_input.encode("utf8")) # we must encode the string to bytes
+    server_response = sock.recv(4096).decode("utf8")
+
+    print("Result from server is {}".format(server_response))
+
 
 def main():
     client()

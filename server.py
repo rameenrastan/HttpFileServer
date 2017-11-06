@@ -3,7 +3,15 @@
 import argparse
 import os
 import socket
-import threading
+import sys
+from threading import Thread
+
+# initialize server with params from user
+def init_server():
+    args = parse()
+    print("args port: %s" % args['p'])
+    run(port=args['p'])
+
 
 # perform user help request
 def perform_help():
@@ -31,43 +39,100 @@ def parse():
         return vars(args)
 
 
-def init_server():
-    args = parse()
-    print("args port: %s" % args['p'])
-    run_server(port=args['p'])
+def run(host='localhost', port=8080):
+
+    # create socket and bind it
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    print('httpfs socket created...')
+    try:
+        sock.bind((host, port))
+        print('httpfs socket binding has completed...')
+    except Exception as e:
+        print('httpfs has encountered an error: %s' % e)
+        sys.exit()
+
+    # listen on socket
+    sock.listen(10)
+    print("socket now listening at: {host: '%s', port: %s}" % (host, port))
+
+    # listen for any incoming connections
+    while True:
+        conn, addr = sock.accept()
+        ip, port = str(addr[0]), str(addr[1])
+        print('Received connection from: {ip: %s, port: %s}' % (ip, port))
+        try:
+            Thread(target=client_thread, args=(conn, ip, port)).start()
+        except Exception as e:
+            print('httpfs error encountered: %s' % e)
+
+    # close socket
+    sock.close()
+
+
+# handle user requests
+def client_thread(conn, ip, port):
+
+    request = conn.recv(4096)
+    request = request.decode('utf8').rstrip()
+    print('user request: %s' % request)
+
+    response = request.encode('utf8')
+    conn.sendall(response)
+    conn.close()
+    print('connection from: {ip: %s, port: %s} has closed...' % (ip, port))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # run web-server
-def run_server(host="localhost", port=8080):
-    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        print("httpfs initiated...")
-        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        listener.bind((host, port))
-        listener.listen(10)
-        print("httpfs listening on (host: %s, port: %s)" % (host, port))
-        while True:
-            print("httpfs is listening for incoming connections...")
-            conn, addr = listener.accept()
-            print("Got a connection from %s" % str(addr))
-            threading.Thread(target=handle_client, args=(conn, addr)).start()
-    except Exception as e:
-        print("httpfs error occured: %s" % (e))
-    finally:
-        print("httpfs closing...")
-        listener.close()
-
-
-# server handle user requests
-def handle_client(conn, addr):
-    try:
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            conn.sendall(data)
-    finally:
-        conn.close()
+# def run_server(host="localhost", port=8080):
+#     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#     try:
+#         print("httpfs initiated...")
+#         listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#         listener.bind((host, port))
+#         listener.listen(10)
+#         print("httpfs listening on (host: %s, port: %s)" % (host, port))
+#         while True:
+#             print("httpfs is listening for incoming connections...")
+#             conn, addr = listener.accept()
+#             print("Got a connection from %s" % str(addr))
+#             threading.Thread(target=handle_client, args=(conn, addr)).start()
+#     except Exception as e:
+#         print("httpfs error occured: %s" % (e))
+#     finally:
+#         print("httpfs closing...")
+#         listener.close()
+#
+#
+# # server handle user requests
+# def handle_client(conn, addr):
+#     try:
+#         while True:
+#             data = conn.recv(1024)
+#             if not data:
+#                 break
+#             conn.sendall(data)
+#     finally:
+#         conn.close()
 
 
 def main():
