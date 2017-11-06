@@ -1,5 +1,8 @@
+# client module handling user requests and validation
+
 import argparse
 import os
+
 
 # parse user input
 def parse():
@@ -20,7 +23,8 @@ def parse():
         perform_help()
 
     else:
-        return vars(args)    
+        return vars(args)
+
 
 # perform user help request
 def perform_help():

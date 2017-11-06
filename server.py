@@ -1,4 +1,5 @@
-import os, fnmatch
+# server module handling server-socket creation, life-cycle and user requests
+
 import socket
 import threading
 
@@ -25,23 +26,10 @@ def handle_client(conn, addr):
                 break
             conn.sendall(data)
     finally:
-        conn.close()        
+        conn.close()
 
 
-# print list of files within user dir
-def list_files():
-    files = os.listdir(directory)
-    pattern = "*.txt"
-    for file in files:
-        if fnmatch.fnmatch(file, pattern):
-            print(file)
 
-
-# read file contents
-def read_file(file):
-    # open file for read only
-    f = open(directory + "/" + file, "r")
-    print("/n" + f.read() + "/n")
 
 
 def init():
