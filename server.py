@@ -7,8 +7,6 @@ import sys
 from threading import Thread
 import util
 
-directory = "server-files"
-
 # initialize server with params from user
 def init_server():
     args = parse()
@@ -63,7 +61,7 @@ def run(host='localhost', port=8080, verbose=False):
         ip, port = str(addr[0]), str(addr[1])
         if verbose: print('Received connection from: {ip: %s, port: %s}' % (ip, port))
         try:
-            Thread(target=client_thread, args=(conn, ip, port, directory)).start()
+            Thread(target=client_thread, args=(conn, ip, port)).start()
         except Exception as e:
             print('Httpfs error encountered: %s' % e)
 
@@ -72,14 +70,14 @@ def run(host='localhost', port=8080, verbose=False):
 
 
 # handle user requests
-def client_thread(conn, ip, port, directory):
+def client_thread(conn, ip, port):
 
     request = conn.recv(4096)
     request = request.decode('utf8').rstrip()
     print('Connection {ip: %s, port: %s} requested: %s' % (ip, port, request))
 
     # prepare response to send back to client
-    response = process_request(request, directory)
+    response = process_request(request)
 
     response = response.encode('utf8')
     conn.sendall(response)
@@ -87,10 +85,10 @@ def client_thread(conn, ip, port, directory):
     print('Connection from: {ip: %s, port: %s} has closed...' % (ip, port))
 
 
-# handle user request
-def process_request(request, directory):
+# handle user request (assumption is that filenames have no spaces)
+def process_request(request):
     if request == "get /":
-        return util.list_files(directory)
+        return util.list_files()
     elif request.startswith("get /"):
         filename = request.replace("get /", "")
         return util.read_file(filename)

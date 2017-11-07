@@ -4,9 +4,11 @@
 import os
 import fnmatch
 
+directory = "server-files"
+
 
 # print list of files within user dir
-def list_files(directory):
+def list_files():
     files_str = ''
     files = os.listdir(directory)
     pattern = "*.txt"
@@ -25,10 +27,10 @@ def list_files(directory):
 def read_file(filename):
     try:
         f = open(directory + "/" + filename, "r")
-        response = "File: " + filename + "\n" + f.read() + "\n"
+        response = "File: " + filename + "\n" + f.read()
         return response
     except:
-        return "%s file does not exist" % file
+        return "%s file does not exist" % filename
 
 
 #overwrite file conents
@@ -39,5 +41,5 @@ def overwrite_file(filename, content):
         return "please specify content for %s" % file
     f.write(content)
     f.seek(0)
-    response = "File: " + filename + "\n" + f.read() + "\n"
+    response = "File: " + filename + "\n" + f.read()
     return response

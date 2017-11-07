@@ -5,10 +5,12 @@ import sys
 
 # test client to test server-socket
 def client():
+
     # create client socket
+    port = input("Please provide port\n")
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(("localhost", 9999))
+        sock.connect(("localhost", int(port)))
     except Exception as e:
         print(e)
         sys.exit()
@@ -19,6 +21,8 @@ def client():
     server_response = sock.recv(4096).decode("utf8")
     print("Server Response:")
     print(server_response)
+
+    sock.close()
 
 
 def main():
