@@ -12,8 +12,7 @@ directory = "server-files"
 # initialize server with params from user
 def init_server():
     args = parse()
-    print("args port: %s" % args['p'])
-    run(port=args['p'])
+    run(port=args['p'], verbose=args['v'])
 
 
 # perform user help request
@@ -35,7 +34,6 @@ def parse():
     parser.add_argument('-p', type=int, default="8080")
     parser.add_argument('-d', type=str, default=dir_path)
     args = parser.parse_args()
-    print(args)
     if args.h:
         perform_help()
     else:
@@ -43,28 +41,27 @@ def parse():
 
 
 # run server
-def run(host='localhost', port=8080):
-
+def run(host='localhost', port=8080, verbose=False):
     # create socket and bind it
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    print('Httpfs socket created...')
+    if verbose: print('Httpfs socket created...')
     try:
         sock.bind((host, port))
-        print('Httpfs socket binding has completed...')
+        if verbose: print('Httpfs socket binding has completed...')
     except Exception as e:
         print('Httpfs has encountered an error: %s' % e)
         sys.exit()
 
     # listen on socket
     sock.listen(10)
-    print("Httpfs socket now listening at: {host: '%s', port: %s}" % (host, port))
+    if verbose: print("Httpfs socket now listening at: {host: '%s', port: %s}" % (host, port))
 
     # listen for any incoming connections
     while True:
         conn, addr = sock.accept()
         ip, port = str(addr[0]), str(addr[1])
-        print('Received connection from: {ip: %s, port: %s}' % (ip, port))
+        if verbose: print('Received connection from: {ip: %s, port: %s}' % (ip, port))
         try:
             Thread(target=client_thread, args=(conn, ip, port, directory)).start()
         except Exception as e:
