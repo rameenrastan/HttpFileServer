@@ -1,12 +1,11 @@
 # main module handling entire application
 
-import client
 import server
 
 
 # main function
 def main():
-    request = client.parse()
+    server.init_server()
 
 
 if __name__ == "__main__":
