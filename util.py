@@ -4,11 +4,9 @@
 import os
 import fnmatch
 
-directory = "server-files"
-
 
 # print list of files within user dir
-def list_files():
+def list_files(directory):
     files_str = ''
     files = os.listdir(directory)
     pattern = "*.txt"
@@ -24,7 +22,7 @@ def list_files():
 
 
 # read file contents
-def read_file(filename):
+def read_file(directory, filename):
     try:
         f = open(directory + "/" + filename, "r")
         response = "File: " + filename + "\n" + f.read()
@@ -34,7 +32,7 @@ def read_file(filename):
 
 
 #overwrite file conents
-def overwrite_file(filename, content):
+def overwrite_file(directory, filename, content):
     # open file for overwrite
     f = open(directory + "/" + filename, "w+")
     if not content:

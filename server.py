@@ -7,6 +7,8 @@ import sys
 from threading import Thread
 import util
 
+directory = "server-files"
+
 # initialize server with params from user
 def init_server():
     args = parse()
@@ -30,11 +32,13 @@ def parse():
     parser.add_argument('-h', action="store_true")
     parser.add_argument('-v', action="store_true")
     parser.add_argument('-p', type=int, default="8080")
-    parser.add_argument('-d', type=str, default=dir_path)
+    parser.add_argument('-d', type=str, default="server-files")
     args = parser.parse_args()
     if args.h:
         perform_help()
     else:
+        global directory
+        directory = args.d
         return vars(args)
 
 
@@ -77,7 +81,7 @@ def client_thread(conn, ip, port):
     print('Connection {ip: %s, port: %s} requested: %s' % (ip, port, request))
 
     # prepare response to send back to client
-    response = process_request(request)
+    response = process_request(directory, request)
 
     response = response.encode('utf8')
     conn.sendall(response)
@@ -86,12 +90,12 @@ def client_thread(conn, ip, port):
 
 
 # handle user request (assumption is that filenames have no spaces)
-def process_request(request):
+def process_request(directory, request):
     if request == "get /":
-        return util.list_files()
+        return util.list_files(directory)
     elif request.startswith("get /"):
         filename = request.replace("get /", "")
-        return util.read_file(filename)
+        return util.read_file(directory, filename)
     elif request.startswith("post /"):
         # obtain all request terms
         terms = request.split()
@@ -104,7 +108,7 @@ def process_request(request):
         content_terms.pop(0)
         for t in content_terms:
             content = content + " " + t
-        return util.overwrite_file(filename, content)
+        return util.overwrite_file(directory, filename, content)
     else:
         return "sorry, '%s' command does not exist" % request
 
