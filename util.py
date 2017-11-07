@@ -23,9 +23,9 @@ def list_files():
 
 
 # read file contents
-def read_file(file):
+def read_file(filename):
     try:
-        f = open(directory + "/" + file, "r")
+        f = open(directory + "/" + filename, "r")
         file_content = "\n" + f.read() + "\n"
         return file_content
     except:

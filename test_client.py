@@ -16,8 +16,8 @@ def client():
     clients_input = input("Please enter a request...\n")
     sock.send(clients_input.encode("utf8")) # we must encode the string to bytes
     server_response = sock.recv(4096).decode("utf8")
-
-    print("Server Response: \n %s" % server_response)
+    print("Server Response:")
+    print(server_response)
 
 
 def main():
