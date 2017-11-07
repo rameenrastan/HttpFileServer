@@ -3,6 +3,7 @@
 import socket
 import sys
 
+# test client to test server-socket
 def client():
     # create client socket
     try:
